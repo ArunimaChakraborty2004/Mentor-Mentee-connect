@@ -34,8 +34,9 @@ A responsive web-based dashboard designed to streamline mentorship workflows. Bu
 
 ### 1. Clone the Repository
 
-git clone https://github.com/your-username/mentor-mentee-dashboard.git
-cd mentor-mentee-dashboard
+- **git clone https**://github.com/ArunimaChakraborty2004/Mentor-Mentee-connect.git
+- cd Mentor-Mentee-connect
+
 
 ### 2. Set Up Supabase
 Create a new project on Supabase.
