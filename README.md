@@ -69,40 +69,7 @@ Set your environment variables in the Vercel dashboard.
 
 🧠 Supabase-powered data storage and authentication
 
-📌 Future Enhancements
-💬 Add real-time chat using Supabase Realtime
-
-📅 Integrate calendar scheduling for sessions
-
-⭐ Add mentor feedback and rating system
-
-📁 Enable file uploads for mentee portfolios
 
 🤝 Contributing
 Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
 
-📄 License
-This project is licensed under the MIT License.
-
-🙌 Acknowledgements
-Supabase
-
-Vercel
-
-FontAwesome (if used for icons)
-
-yaml
-Copy code
-
----
-
-### ✅ To Use:
-- Replace `your-username` with your actual GitHub username.
-- Add a `LICENSE` file if you plan to include one (MIT is commonly used).
-- Add issue templates/contribution guidelines if open to contributions.
-
-Let me know if you’d like a dark/light theme toggle, mobile mockups, or sample data for seeding the database.
-
-
-
-Ask ChatGPT
