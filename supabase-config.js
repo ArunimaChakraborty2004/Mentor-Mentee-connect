@@ -24,19 +24,18 @@ async function checkAuthState() {
 
         const currentPath = window.location.pathname;
         const fileName = currentPath.split('/').pop() || 'index.html';
+        const urlParams = new URLSearchParams(window.location.search);
+        const isTesting = urlParams.get('test') === 'true';
 
         const publicPages = ['index.html', 'register.html', 'forgot-password.html'];
 
-        if (user) {
-            // If user is logged in and on login page, redirect to role-selection
-            if (fileName === 'index.html') {
-                window.location.href = 'role-selection.html';
-            }
-        } else {
-            // If user is not logged in and trying to access a protected page
-            if (!publicPages.includes(fileName)) {
-                window.location.href = 'index.html';
-            }
+        console.log("User session:", user);
+        console.log("Current page:", fileName);
+
+        if (user && fileName === 'index.html' && !isTesting) {
+            window.location.href = 'role-selection.html';
+        } else if (!user && !publicPages.includes(fileName)) {
+            window.location.href = 'index.html';
         }
     } catch (error) {
         console.error('Auth check error:', error);
