@@ -19,7 +19,8 @@ A responsive web-based dashboard designed to streamline mentorship workflows. Bu
 | `DATABASE_SETUP.md`          | Supabase schema setup and configuration guide|
 | `database-schema-clean.sql` | SQL schema for initializing Supabase DB      |
 | `vercel.json`                | Deployment config for Vercel                 |
-
+| `mentee-dashboard.html`     | Mentee dashboard view
+| `academic-progression.html` | Academic history and milestones
 ---
 
 ## 🛠️ Tech Stack
