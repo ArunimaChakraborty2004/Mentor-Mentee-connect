@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mentee Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body, html {
+      height: 100%;
+      width: 100%;
+    }
+
+    .container {
+      background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('iwp project/dashboardbg.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      max-width: 500px;
+      text-align: center;
+      color: white;
+    }
+
+    .logo {
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+      color: #33968b;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .tagline {
+      margin-bottom: 30px;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      color: #fff;
+    }
+
+    .form-container {
+      background-color: rgba(31, 31, 31, 0.95);
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      border: 1px solid rgba(51, 150, 139, 0.3);
+    }
+
+    .form-container button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      background: linear-gradient(135deg, #33968b, #2d7a70);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .form-container button:hover {
+      background: linear-gradient(135deg, #2d7a70, #33968b);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(51, 150, 139, 0.4);
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: #33968b;
+      margin: 0 10px;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="logo">MENTEE DASHBOARD</div>
+      <div class="tagline">Track Your Journey</div>
+      <div class="form-container">
+        <button onclick="location.href='academic-progression.html'">📘 View Academic Progression</button>
+        <button onclick="location.href='mentor-dashboard.html'">🔄 Switch to Mentor View</button>
+        <button onclick="location.href='index.html'">🚪 Logout</button>
+      </div>
+    </div>
+    <div class="footer">
+      <a href="help.html">HELP</a> | <a href="contact.html">CONTACT US</a>
+    </div>
+  </div>
+</body>
+</html>
