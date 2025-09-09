@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentor Dashboard - Mentor Connect</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('iwp project/dashboardbg.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      padding: 40px 20px 20px 20px;
+      color: white;
+      font-size: 2.5rem;
+      font-weight: bold;
+      background-color: rgba(0, 0, 0, 0.7);
+      position: relative;
+      border-bottom: 3px solid #33968b;
+    }
+
+    .user-info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .user-name {
+      color: #33968b;
+      font-size: 1rem;
+      font-weight: normal;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: rgba(31, 31, 31, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(51, 150, 139, 0.3);
+    }
+
+    .card {
+      background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+      display: flex;
+      align-items: center;
+      padding: 25px;
+      border-radius: 15px;
+      margin: 20px 0;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      border: 1px solid rgba(51, 150, 139, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(51, 150, 139, 0.2);
+      border-color: #33968b;
+    }
+
+    .card img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 25px;
+      border: 3px solid #33968b;
+      object-fit: cover;
+    }
+
+    .card-content {
+      flex: 1;
+    }
+
+    .card-content h3 {
+      margin: 0 0 10px 0;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      color: #33968b;
+      letter-spacing: 1px;
+    }
+
+    .card-content p {
+      margin: 0 0 15px 0;
+      color: #ccc;
+      line-height: 1.5;
+    }
+
+    .card-content button {
+      padding: 12px 25px;
+      background: linear-gradient(135deg, #33968b, #2d7a70);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+    }
+
+    .card-content button:hover {
+      background: linear-gradient(135deg, #2d7a70, #33968b);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(51, 150, 139, 0.4);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #33968b, #2d7a70);
+      padding: 25px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 6px 20px rgba(51, 150, 139, 0.3);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .quick-actions {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    .quick-actions button {
+      margin: 10px;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #33968b, #2d7a70);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .quick-actions button:hover {
+      background: linear-gradient(135deg, #2d7a70, #33968b);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(51, 150, 139, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        font-size: 2rem;
+        padding: 30px 15px 15px 15px;
+      }
+      
+      .user-info {
+        position: static;
+        justify-content: center;
+        margin-top: 15px;
+      }
+      
+      .dashboard-container {
+        margin: 15px;
+        padding: 15px;
+      }
+      
+      .card {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+      }
+      
+      .card img {
+        margin-right: 0;
+        margin-bottom: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    MENTOR DASHBOARD
+    <div class="user-info">
+      <span class="user-name" id="userName">Loading...</span>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="dashboard-container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number" id="totalMentees">0</div>
+        <div class="stat-label">Total Mentees</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="activeSessions">0</div>
+        <div class="stat-label">Active Sessions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="completedSessions">0</div>
+        <div class="stat-label">Completed Sessions</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="iwp project/teacher.jpg" alt="Mentee Profile">
+      <div class="card-content">
+        <h3>Mentee Management</h3>
+        <p>View and manage your mentee profiles, track their progress, and update their academic records.</p>
+        <button onclick="window.location.href='mentee-profiles.html'">Manage Mentees</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="iwp project/download.jpg" alt="Session Recording">
+      <div class="card-content">
+        <h3>Session Recording</h3>
+        <p>Record mentoring sessions, track meeting notes, and maintain a comprehensive session history.</p>
+        <button onclick="window.location.href='session-records.html'">Record Sessions</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="iwp project/download (1).jpg" alt="Academic Tracking">
+      <div class="card-content">
+        <h3>Academic Progress</h3>
+        <p>Monitor academic performance, enter grades, and track semester-wise progress of your mentees.</p>
+        <button onclick="window.location.href='academic-tracking.html'">Track Progress</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="iwp project/download (2).jpg" alt="Internship Guidance">
+      <div class="card-content">
+        <h3>Internship Guidance</h3>
+        <p>Guide mentees through internship applications, track their internship progress, and provide career advice.</p>
+        <button onclick="window.location.href='internship-guidance.html'">Manage Internships</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/mentor-dashboard.js"></script>
+</body>
+</html>

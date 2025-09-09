@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Role Selection - Mentor Connect</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('iwp project/dashboardbg.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      color: #33968b;
+      font-size: 3rem;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      letter-spacing: 2px;
+    }
+    
+    h2 {
+      margin-bottom: 50px;
+      text-align: center;
+      color: #fff;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1000px;
+      margin: 30px auto;
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .role-card {
+      flex: 1;
+      min-width: 300px;
+      max-width: 400px;
+      background: linear-gradient(145deg, #1f1f1f, #2a2a2a);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 2px solid rgba(51, 150, 139, 0.3);
+      transition: all 0.3s ease;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .role-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #33968b, #2d7a70);
+    }
+
+    .role-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(51, 150, 139, 0.3);
+      border-color: #33968b;
+    }
+
+    .role-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #33968b, #2d7a70);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+    }
+
+    .role-card h3 {
+      margin: 20px 0;
+      font-size: 1.8rem;
+      color: #33968b;
+      font-weight: bold;
+    }
+
+    .role-card p {
+      margin-bottom: 30px;
+      line-height: 1.6;
+      color: #ccc;
+      font-size: 1.1rem;
+    }
+
+    .role-card button {
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #33968b, #2d7a70);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      letter-spacing: 1px;
+      width: 100%;
+    }
+
+    .role-card button:hover {
+      background: linear-gradient(135deg, #2d7a70, #33968b);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(51, 150, 139, 0.4);
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .role-card {
+        min-width: 280px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    
+    <h1>Welcome to Mentor Connect</h1>
+    <h2>Choose Your Role</h2>
+    
+    <div class="container">
+        <div class="role-card">
+            <div class="role-icon">👨‍🏫</div>
+            <h3>Continue as Mentor</h3>
+            <p>Guide and support mentees in their academic and professional journey. Share your expertise and help shape the future.</p>
+            <button onclick="console.log('Mentor button clicked'); selectRole('mentor')" style="cursor: pointer;">Enter as Mentor</button>
+        </div>
+
+        <div class="role-card">
+            <div class="role-icon">👨‍🎓</div>
+            <h3>Continue as Mentee</h3>
+            <p>Connect with experienced mentors, access resources, and track your academic progress and achievements.</p>
+            <button onclick="console.log('Mentee button clicked'); selectRole('mentee')" style="cursor: pointer;">Enter as Mentee</button>
+        </div>
+    </div>
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Declare global variables
+        let supabaseClient;
+        let isClientReady = false;
+        
+        // Initialize Supabase client immediately
+        const SUPABASE_URL = 'https://wukeibhjznoqhfnifaaj.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind1a2VpYmhqem5vcWhmbmlmYWFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTczNTE4MTUsImV4cCI6MjA3MjkyNzgxNX0.EG_GnFtVbpp79PkPTkeypmHSZl6T1xQS7avmHdt7KMA';
+        
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            isClientReady = true;
+            console.log('Supabase client initialized successfully');
+        } else {
+            console.error('Supabase library not available');
+        }
+        
+        async function selectRole(role) {
+            console.log('selectRole called with:', role);
+            
+            try {
+                // Store selected role in session storage
+                sessionStorage.setItem('selectedRole', role);
+                console.log('Role stored in session storage:', role);
+                
+                // For now, just redirect - we'll update the database later if needed
+                console.log('Redirecting to dashboard...');
+                
+                // Redirect to appropriate dashboard
+                if (role === 'mentor') {
+                    console.log('Redirecting to mentor dashboard');
+                    window.location.href = 'mentor-dashboard.html';
+                } else {
+                    console.log('Redirecting to mentee dashboard');
+                    window.location.href = 'mentee-dashboard.html';
+                }
+            } catch (error) {
+                console.error('Error selecting role:', error);
+                alert('An error occurred: ' + error.message);
+            }
+        }
+        
+        async function handleLogout() {
+            try {
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.auth.signOut();
+                    if (error) {
+                        console.error('Logout error:', error);
+                    }
+                }
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('DOM loaded, checking auth...');
+            
+            // Wait a bit for everything to be ready
+            setTimeout(async () => {
+                if (!isClientReady || !supabaseClient) {
+                    console.error('Supabase client not ready after timeout');
+                    alert('Application failed to initialize. Please refresh the page.');
+                    return;
+                }
+                
+                try {
+                    const { data: { user }, error } = await supabaseClient.auth.getUser();
+                    
+                    if (error) {
+                        console.error('Auth check error:', error);
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                    
+                    if (!user) {
+                        console.log('No user found, redirecting to login');
+                        window.location.href = 'index.html';
+                    } else {
+                        console.log('User authenticated:', user.email);
+                    }
+                } catch (error) {
+                    console.error('Error checking auth:', error);
+                    window.location.href = 'index.html';
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
