@@ -58,17 +58,17 @@ Set your environment variables in the Vercel dashboard.
 ### 🌐 Live Deployment
 Access the live application here: 🔗 https://mentormenteeconnect.vercel.app/
 - 🔐 Features
-🔑 Role-based login and dashboard access
+-- 🔑 Role-based login and dashboard access
 
-📝 Session tracking and mentorship logs
+-- 📝 Session tracking and mentorship logs
 
-📂 Portfolio view for mentees
+---📂 Portfolio view for mentees
 
-📚 Internship guidance resources
+-- 📚 Internship guidance resources
 
-🔄 Password recovery flow
+-- 🔄 Password recovery flow
 
-🧠 Supabase-powered data storage and authentication
+-- 🧠 Supabase-powered data storage and authentication
 
 
 🤝 Contributing
