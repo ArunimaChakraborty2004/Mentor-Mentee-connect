@@ -57,7 +57,7 @@ Vercel will automatically detect index.html as the entry point.
 Set your environment variables in the Vercel dashboard.
 ### 🌐 Live Deployment
 Access the live application here: 🔗 https://mentormenteeconnect.vercel.app/
-🔐 Features
+- 🔐 Features
 🔑 Role-based login and dashboard access
 
 📝 Session tracking and mentorship logs
