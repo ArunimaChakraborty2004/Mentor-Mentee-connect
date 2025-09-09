@@ -34,7 +34,6 @@ A responsive web-based dashboard designed to streamline mentorship workflows. Bu
 
 ### 1. Clone the Repository
 
-```bash
 git clone https://github.com/your-username/mentor-mentee-dashboard.git
 cd mentor-mentee-dashboard
 
