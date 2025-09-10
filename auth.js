@@ -49,7 +49,6 @@ async function handleRegister() {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    const role = document.getElementById('role').value;
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
     const registerForm = document.getElementById('registerForm');
@@ -58,10 +57,11 @@ async function handleRegister() {
     errorDiv.style.display = 'none';
     successDiv.style.display = 'none';
     
-    if (!name || !email || !password || !confirmPassword || !role) {
-        showError('Please fill in all fields');
-        return;
-    }
+    if (!name || !email || !password || !confirmPassword) {
+    showError('Please fill in all fields');
+    return;
+}
+
     
     if (password !== confirmPassword) {
         showError('Passwords do not match');
