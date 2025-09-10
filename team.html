@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Members</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    h1 {
+      margin-bottom: 25px;
+      font-size: 2rem;
+      color: #00f2fe;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+    }
+
+    table {
+      width: 80%;
+      max-width: 750px;
+      border-collapse: collapse;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+      backdrop-filter: blur(6px);
+    }
+
+    th, td {
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 1rem;
+      color: #e0f7fa;
+    }
+
+    th {
+      background-color: rgba(0, 119, 182, 0.9);
+      color: #fff;
+      font-size: 1.1em;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    tr:hover {
+      background-color: rgba(0, 242, 254, 0.2);
+    }
+
+    .btn {
+      margin-top: 30px;
+      padding: 12px 28px;
+      border: none;
+      border-radius: 8px;
+      background-color: #00b4d8;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover {
+      background-color: #0096c7;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+  <h1>Our Project Team</h1>
+
+  <table>
+    <tr>
+      <th>Reg_No</th>
+      <th>Name</th>
+      <th>Branch</th>
+    </tr>
+    <tr>
+      <td>2360341</td>
+      <td>Arunima Chakraborty</td>
+      <td>CSE</td>
+    </tr>
+    <tr>
+      <td>2360</td>
+      <td>Adwait Raj Jain</td>
+      <td>CSE</td>
+    </tr>
+    <tr>
+      <td>2360</td>
+      <td>Bharathan</td>
+      <td>CSE</td>
+    </tr>
+    <tr>
+      <td>2360</td>
+      <td>Vidhi Garg</td>
+      <td>CSE</td>
+    </tr>
+  </table>
+
+  <button class="btn" onclick="window.location.href='index.html'">
+    Enter Website
+  </button>
+</body>
+</html>
