@@ -109,6 +109,7 @@ async function handleRegister() {
             }
             
             showSuccess('Registration successful! Please check your email to verify your account.');
+            alert("✅ Successfully registered!");
         }
     } catch (error) {
         showError('An unexpected error occurred');
