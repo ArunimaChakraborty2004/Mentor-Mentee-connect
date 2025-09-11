@@ -13,42 +13,44 @@ document.addEventListener('DOMContentLoaded', async function () {
 });
 
 async function checkAuthState() {
-    try {
-        if (!supabaseClient) return;
+  try {
+    if (!supabaseClient) return;
 
-        const { data: { user }, error } = await supabaseClient.auth.getUser();
-        if (error) {
-            console.error('Error fetching user:', error.message);
-            return;
-        }
-
-        const currentPath = window.location.pathname;
-        const fileName = currentPath.split('/').pop() || 'index.html';
-        const urlParams = new URLSearchParams(window.location.search);
-        const isTesting = urlParams.get('test') === 'true';
-
-        const publicPages = ['index.html', 'register.html', 'forgot-password.html'];
-
-        console.log("User session:", user);
-        console.log("Current page:", fileName);
-
-        // ✅ Only redirect if user is NOT logged in and trying to access a protected page
-        if (!user && !publicPages.includes(fileName)) {
-            window.location.href = 'index.html';
-        }
-
-        // ✅ If user is logged in and on index.html, show a welcome message instead of redirecting
-        if (user && fileName === 'index.html') {
-            const welcomeDiv = document.getElementById('welcomeBack');
-            if (welcomeDiv) {
-                welcomeDiv.innerHTML = `Welcome back, ${user.email}! <button onclick="continueToDashboard()">Continue</button>`;
-                welcomeDiv.style.display = 'block';
-            }
-        }
-    } catch (error) {
-        console.error('Auth check error:', error);
+    // First get the current session
+    const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+    if (sessionError) {
+      console.error("Error fetching session:", sessionError.message);
+      return;
     }
+
+    const user = session?.user || null;
+
+    const currentPath = window.location.pathname;
+    const fileName = currentPath.split('/').pop() || 'index.html';
+    const urlParams = new URLSearchParams(window.location.search);
+    const isTesting = urlParams.get('test') === 'true';
+
+    const publicPages = ['index.html', 'register.html', 'forgot-password.html'];
+
+    console.log("User session:", user);
+    console.log("Current page:", fileName);
+
+    if (!user && !publicPages.includes(fileName)) {
+      window.location.href = 'index.html';
+    }
+
+    if (user && fileName === 'index.html') {
+      const welcomeDiv = document.getElementById('welcomeBack');
+      if (welcomeDiv) {
+        welcomeDiv.innerHTML = `Welcome back, ${user.email}! <button onclick="continueToDashboard()">Continue</button>`;
+        welcomeDiv.style.display = 'block';
+      }
+    }
+  } catch (error) {
+    console.error('Auth check error:', error);
+  }
 }
+
 
 function continueToDashboard() {
     window.location.href = 'role-selection.html';
