@@ -52,7 +52,7 @@ const user = data.session?.user || null; // safe check
         }
 
         // ✅ If user is logged in and on index.html, show a welcome message instead of redirecting
-        if (user && fileName === 'index.html') {
+        if (user && fileName === 'login.html') {
             const welcomeDiv = document.getElementById('welcomeBack');
             if (welcomeDiv) {
                 welcomeDiv.innerHTML = `Welcome back, ${user.email}! <button onclick="continueToDashboard()">Continue</button>`;
