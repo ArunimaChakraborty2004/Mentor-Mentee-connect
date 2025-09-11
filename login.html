@@ -194,6 +194,47 @@
                 <input type="email" id="email" placeholder="Email" required />
                 <input type="password" id="password" placeholder="Password" required />
                 <button onclick="handleLogin()" id="loginBtn">LOGIN</button>
+                <script>
+    async function handleLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const errorDiv = document.getElementById('errorMessage');
+        const successDiv = document.getElementById('successMessage');
+
+        errorDiv.style.display = 'none';
+        successDiv.style.display = 'none';
+
+        if (!email || !password) {
+            errorDiv.innerText = 'Please enter both email and password.';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        try {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+                email,
+                password
+            });
+
+            if (error) {
+                errorDiv.innerText = error.message;
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            successDiv.innerText = 'Login successful! Redirecting...';
+            successDiv.style.display = 'block';
+
+            // ✅ Redirect to correct dashboard
+            window.location.href = 'mentor-dashboard.html';
+        } catch (err) {
+            errorDiv.innerText = 'Unexpected error occurred. Please try again.';
+            errorDiv.style.display = 'block';
+            console.error('Login error:', err);
+        }
+    }
+</script>
+
                 <a href="register.html">Don't have an account? Register</a>
                 <a href="forgot-password.html">Forgot password?</a>
             </div>
