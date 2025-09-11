@@ -5,39 +5,40 @@ async function handleLogin() {
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
     const loginForm = document.getElementById('loginForm');
-    
+
     // Reset messages
     errorDiv.style.display = 'none';
     successDiv.style.display = 'none';
-    
+
     if (!email || !password) {
         showError('Please fill in all fields');
         return;
     }
-    
+
     if (!supabaseClient) {
         showError('Application not ready. Please refresh the page.');
         return;
     }
-    
+
     // Show loading state
     loginForm.classList.add('loading');
-    
+
     try {
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password,
         });
-        
+
         if (error) {
             showError(error.message);
         } else {
             showSuccess('Login successful! Redirecting...');
             setTimeout(() => {
-                window.location.href = 'role-selection.html';
+                window.location.href = 'dashboard.html'; // Update this as needed
             }, 1500);
         }
     } catch (error) {
+        console.error('Login error:', error);
         showError('An unexpected error occurred');
     } finally {
         loginForm.classList.remove('loading');
@@ -52,66 +53,66 @@ async function handleRegister() {
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
     const registerForm = document.getElementById('registerForm');
-    
+
     // Reset messages
     errorDiv.style.display = 'none';
     successDiv.style.display = 'none';
-    
-    if (!name || !email || !password || !confirmPassword) {
-    showError('Please fill in all fields');
-    return;
-}
 
-    
+    if (!name || !email || !password || !confirmPassword) {
+        showError('Please fill in all fields');
+        return;
+    }
+
     if (password !== confirmPassword) {
         showError('Passwords do not match');
         return;
     }
-    
+
     if (password.length < 6) {
         showError('Password must be at least 6 characters long');
         return;
     }
-    
+
     // Show loading state
     registerForm.classList.add('loading');
-    
+
     try {
         const { data, error } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
             options: {
                 data: {
-                    name: name,
-                    role: role
+                    name: name
                 }
             }
         });
-        
+
         if (error) {
             showError(error.message);
-        } else {
-            // Create user profile in database
-            const { error: profileError } = await supabaseClient
-                .from('user_profiles')
-                .insert([
-                    {
-                        user_id: data.user.id,
-                        name: name,
-                        email: email,
-                        role: role,
-                        created_at: new Date().toISOString()
-                    }
-                ]);
-            
-            if (profileError) {
-                console.error('Profile creation error:', profileError);
-            }
-            
-            showSuccess('Registration successful! Please check your email to verify your account.');
-            alert("✅ Successfully registered!");
+            return;
         }
+
+        const { error: profileError } = await supabaseClient
+            .from('user_profiles')
+            .insert([
+                {
+                    user_id: data.user.id,
+                    name: name,
+                    email: email,
+                    created_at: new Date().toISOString()
+                }
+            ]);
+
+        if (profileError) {
+            console.error('Profile creation error:', profileError.message);
+            showError(profileError.message);
+            return;
+        }
+
+        showSuccess('Registration successful! Please check your email to verify your account.');
+        alert("✅ Successfully registered!");
     } catch (error) {
+        console.error('Unexpected error:', error);
         showError('An unexpected error occurred');
     } finally {
         registerForm.classList.remove('loading');
@@ -123,28 +124,29 @@ async function handleForgotPassword() {
     const errorDiv = document.getElementById('errorMessage');
     const successDiv = document.getElementById('successMessage');
     const form = document.getElementById('forgotPasswordForm');
-    
+
     // Reset messages
     errorDiv.style.display = 'none';
     successDiv.style.display = 'none';
-    
+
     if (!email) {
         showError('Please enter your email address');
         return;
     }
-    
+
     // Show loading state
     form.classList.add('loading');
-    
+
     try {
         const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
-        
+
         if (error) {
             showError(error.message);
         } else {
             showSuccess('Password reset email sent! Please check your inbox.');
         }
     } catch (error) {
+        console.error('Password reset error:', error);
         showError('An unexpected error occurred');
     } finally {
         form.classList.remove('loading');
@@ -164,6 +166,7 @@ async function handleLogout() {
     }
 }
 
+// UI feedback helpers
 function showError(message) {
     const errorDiv = document.getElementById('errorMessage');
     errorDiv.textContent = message;
