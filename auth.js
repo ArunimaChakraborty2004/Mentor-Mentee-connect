@@ -34,7 +34,7 @@ async function handleLogin() {
         } else {
             showSuccess('Login successful! Redirecting...');
             setTimeout(() => {
-                window.location.href = 'dashboard.html'; // Update this as needed
+                window.location.href = 'role-selection.html'; // Update this as needed
             }, 1500);
         }
     } catch (error) {
