@@ -6,35 +6,21 @@ let supabaseClient;
 document.addEventListener('DOMContentLoaded', async function () {
     if (typeof supabase !== 'undefined') {
         supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // ✅ First check session
         await checkAuthState();
-
-        // ✅ Then listen for login/logout/session changes
-        supabaseClient.auth.onAuthStateChange((_event, session) => {
-            console.log("Auth state changed:", _event, session);
-            checkAuthState(session);
-        });
     } else {
         console.error('Supabase library not loaded');
     }
 });
 
-
 async function checkAuthState() {
     try {
         if (!supabaseClient) return;
 
-        // ✅ Get session instead of getUser()
-const { data, error } = await supabaseClient.auth.getSession();
-
-if (error && error.message !== "Auth session missing!") {
-    console.error("Error fetching session:", error.message);
-    return;
-}
-
-const user = data.session?.user || null; // safe check
-
+        const { data: { user }, error } = await supabaseClient.auth.getUser();
+        if (error) {
+            console.error('Error fetching user:', error.message);
+            return;
+        }
 
         const currentPath = window.location.pathname;
         const fileName = currentPath.split('/').pop() || 'index.html';
@@ -52,7 +38,7 @@ const user = data.session?.user || null; // safe check
         }
 
         // ✅ If user is logged in and on index.html, show a welcome message instead of redirecting
-        if (user && fileName === 'login.html') {
+        if (user && fileName === 'index.html') {
             const welcomeDiv = document.getElementById('welcomeBack');
             if (welcomeDiv) {
                 welcomeDiv.innerHTML = `Welcome back, ${user.email}! <button onclick="continueToDashboard()">Continue</button>`;
