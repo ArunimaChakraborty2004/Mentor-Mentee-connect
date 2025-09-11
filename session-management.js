@@ -1,35 +1,41 @@
-// Session management functionality
 let currentEditingId = null;
 
-document.addEventListener('DOMContentLoaded', async function() {
-    await checkAuthState();
-    await loadMentees();
-    await loadSessions();
-    
-    // Set today's date as default
+document.addEventListener('DOMContentLoaded', async function () {
+    const user = await getValidUser();
+    if (!user) return;
+
+    await loadMentees(user.id);
+    await loadSessions(user.id);
+
     document.getElementById('session_date').value = new Date().toISOString().split('T')[0];
-    
     document.getElementById('sessionForm').addEventListener('submit', handleSessionSubmit);
 });
 
-async function loadMentees() {
-    try {
-        if (!supabaseClient) {
-            console.error('Supabase client not initialized');
-            return;
-        }
-        
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (!user) return;
+async function getValidUser() {
+    const { data, error } = await supabaseClient.auth.getSession();
+    const user = data?.session?.user;
 
+    if (!user) {
+        console.error('Session missing or user not found');
+        showMessage('Session expired. Please log in again.', 'error');
+        await supabaseClient.auth.signOut();
+        window.location.href = 'login.html';
+        return null;
+    }
+
+    return user;
+}
+
+async function loadMentees(mentorId) {
+    try {
         const { data: mentees, error } = await supabaseClient
             .from('mentee_profiles')
             .select('id, name')
-            .eq('mentor_id', user.id)
+            .eq('mentor_id', mentorId)
             .order('name');
 
         const menteeSelect = document.getElementById('mentee');
-        
+
         if (error || !mentees || mentees.length === 0) {
             menteeSelect.innerHTML = '<option value="">No mentees found</option>';
             return;
@@ -44,33 +50,27 @@ async function loadMentees() {
 
 async function handleSessionSubmit(e) {
     e.preventDefault();
-    
+    const user = await getValidUser();
+    if (!user) return;
+
     const formData = new FormData(e.target);
     const sessionData = Object.fromEntries(formData.entries());
-    
+
     if (currentEditingId) {
         await updateSession(currentEditingId, sessionData);
     } else {
-        await addSession(sessionData);
+        await addSession(user.id, sessionData);
     }
 }
 
-async function addSession(sessionData) {
+async function addSession(mentorId, sessionData) {
     try {
-        if (!supabaseClient) {
-            console.error('Supabase client not initialized');
-            return;
-        }
-        
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (!user) return;
-
-        const { data, error } = await supabaseClient
+        const { error } = await supabaseClient
             .from('mentoring_sessions')
             .insert([
                 {
                     ...sessionData,
-                    mentor_id: user.id,
+                    mentor_id: mentorId,
                     created_at: new Date().toISOString()
                 }
             ]);
@@ -80,17 +80,17 @@ async function addSession(sessionData) {
         } else {
             showMessage('Session recorded successfully!', 'success');
             clearForm();
-            await loadSessions();
+            await loadSessions(mentorId);
         }
     } catch (error) {
-        showMessage('An unexpected error occurred', 'error');
+        showMessage('Unexpected error occurred', 'error');
         console.error('Error adding session:', error);
     }
 }
 
 async function updateSession(id, sessionData) {
     try {
-        const { data, error } = await supabaseClient
+        const { error } = await supabaseClient
             .from('mentoring_sessions')
             .update(sessionData)
             .eq('id', id);
@@ -101,41 +101,29 @@ async function updateSession(id, sessionData) {
             showMessage('Session updated successfully!', 'success');
             currentEditingId = null;
             clearForm();
-            await loadSessions();
+            const user = await getValidUser();
+            if (user) await loadSessions(user.id);
         }
     } catch (error) {
-        showMessage('An unexpected error occurred', 'error');
+        showMessage('Unexpected error occurred', 'error');
         console.error('Error updating session:', error);
     }
 }
 
-async function loadSessions() {
+async function loadSessions(mentorId) {
     try {
-        if (!supabaseClient) {
-            console.error('Supabase client not initialized');
-            return;
-        }
-        
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (!user) return;
-
         const { data: sessions, error } = await supabaseClient
             .from('mentoring_sessions')
             .select(`
                 *,
                 mentee_profiles!inner(name)
             `)
-            .eq('mentor_id', user.id)
+            .eq('mentor_id', mentorId)
             .order('session_date', { ascending: false });
 
-        if (error) {
-            console.error('Error loading sessions:', error);
-            return;
-        }
-
         const sessionsList = document.getElementById('sessionsList');
-        
-        if (!sessions || sessions.length === 0) {
+
+        if (error || !sessions || sessions.length === 0) {
             sessionsList.innerHTML = '<p style="text-align: center; color: #ccc;">No sessions recorded yet. Record your first session above!</p>';
             return;
         }
@@ -218,7 +206,6 @@ async function editSession(id) {
             return;
         }
 
-        // Populate form with session data
         currentEditingId = id;
         document.getElementById('mentee').value = session.mentee;
         document.getElementById('session_date').value = session.session_date;
@@ -229,9 +216,7 @@ async function editSession(id) {
         document.getElementById('action_items').value = session.action_items || '';
         document.getElementById('notes').value = session.notes || '';
 
-        // Scroll to form
         document.getElementById('sessionForm').scrollIntoView({ behavior: 'smooth' });
-        
         showMessage('Editing mode activated. Update the form and click "Save Session" to save changes.', 'success');
     } catch (error) {
         showMessage('Error loading session data', 'error');
@@ -240,9 +225,7 @@ async function editSession(id) {
 }
 
 async function deleteSession(id) {
-    if (!confirm('Are you sure you want to delete this session record? This action cannot be undone.')) {
-        return;
-    }
+    if (!confirm('Are you sure you want to delete this session record? This action cannot be undone.')) return;
 
     try {
         const { error } = await supabaseClient
@@ -254,10 +237,11 @@ async function deleteSession(id) {
             showMessage('Error deleting session: ' + error.message, 'error');
         } else {
             showMessage('Session deleted successfully', 'success');
-            await loadSessions();
+            const user = await getValidUser();
+            if (user) await loadSessions(user.id);
         }
     } catch (error) {
-        showMessage('An unexpected error occurred', 'error');
+        showMessage('Unexpected error occurred', 'error');
         console.error('Error deleting session:', error);
     }
 }
@@ -268,14 +252,23 @@ function clearForm() {
     document.getElementById('session_date').value = new Date().toISOString().split('T')[0];
 }
 
-function showMessage(message, type) {
+// Placeholder function to show messages (you may have your own implementation)
+function showMessage(message, type = 'info') {
     const messageContainer = document.getElementById('messageContainer');
-    const messageClass = type === 'error' ? 'error-message' : 'success-message';
-    
-    messageContainer.innerHTML = `<div class="${messageClass}">${message}</div>`;
-    
-    // Auto-hide after 5 seconds
+    if (!messageContainer) {
+        console.warn('Message container not found in HTML');
+        alert(message); // fallback
+        return;
+    }
+
+    messageContainer.textContent = message;
+    messageContainer.className = `message ${type}`; // e.g., "message success" or "message error"
+
+    messageContainer.style.display = 'block';
+
     setTimeout(() => {
-        messageContainer.innerHTML = '';
-    }, 5000);
+        messageContainer.style.display = 'none';
+        messageContainer.className = 'message';
+        messageContainer.textContent = '';
+    }, 5000); // hide after 5 seconds
 }
